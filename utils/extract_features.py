@@ -83,7 +83,12 @@ def aggregate_history(data):
     return shopper_data
 
 if __name__ == '__main__':
-    num_process = 4 # Number of concurrent processes; change to your number of cores if you have an SSD
+
+    # ----- TWEAK PERFORMANCE HERE -----
+    num_process = 4
+    chunksize = 512
+    # ----------------------------------
+    
     start = time.clock()
     
     data_dir = os.path.join('..','data_files')
@@ -119,7 +124,7 @@ if __name__ == '__main__':
         p = Pool( num_process )
         # from multiprocessing.pool import ThreadPool
         # p = ThreadPool(processes = num_process)
-        out_arr = p.imap_unordered( aggregate_history , split_by_id(transactions) , chunksize = 512)
+        out_arr = p.imap_unordered( aggregate_history , split_by_id(transactions) , chunksize = chunksize)
     else:
         out_arr = map( aggregate_history , split_by_id(transactions) )
 
